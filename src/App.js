@@ -3,6 +3,8 @@ import * as Tone from 'tone';
 import Layer from './layers/layer';
 import Terrain from './layers/terrain';
 import Towers from './layers/towers';
+import Ui from './layers/ui';
+import Shooter from './towers/shooter';
 
 class App extends Component {
   tHeight = 8;
@@ -16,12 +18,22 @@ class App extends Component {
     };
   }
 
+  handleUiClick = (x, y) => {
+    if(this.towers.towerGrid.getCell(x,y)){
+      this.towers.towerGrid.setCell(x,y, undefined);
+    }else{
+      this.towers.towerGrid.setCell(x,y, new Shooter());
+    }
+    this.reSize();
+    this.towers.reDraw();
+  }
+
   componentDidMount() {
     // Init Canvas components
     this.terrain = new Terrain("terrainCanvas", this.tWidth, this.tHeight );
     this.towers = new Towers("towerCanvas", this.tWidth, this.tHeight);
     this.enemy = new Layer("enemyCanvas", this.tWidth, this.tHeight);
-    this.ui = new Layer("uiCanvas", this.tWidth, this.tHeight);
+    this.ui = new Ui("uiCanvas", this.tWidth, this.tHeight, this.handleUiClick);
 
     this.reSize();
     window.addEventListener('resize', () => { this.reSize() }, false);

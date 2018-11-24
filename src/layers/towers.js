@@ -2,12 +2,10 @@ import Layer from './layer';
 import ItemGrid from '../utils/itemGrid';
 import Shooter from '../towers/shooter';
 export default class Towers extends Layer {
+    notes = ["E4", "F4","B3","A3","G3","E3", "C3", "C2" ];
     constructor(name, width, height) {
         super(name, width, height);
         this.towerGrid = new ItemGrid(width, height);
-        this.towerGrid.setCell(2,3, new Shooter());
-        this.towerGrid.setCell(6,2, new Shooter());
-        this.towerGrid.setCell(6,1, new Shooter());
     }
 
     update(time, state){
@@ -17,7 +15,7 @@ export default class Towers extends Layer {
                 if(x == state.currentColumn){
                     const tower = this.towerGrid.getCell(x, y);
                     if (tower) {
-                        tower.activate("C" + y, time);
+                        tower.activate(this.notes[y], time);
                     }
                 }
             }

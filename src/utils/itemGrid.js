@@ -13,6 +13,11 @@ export default class ItemGrid {
     }
 
     setCell = (x, y, item) => {
+        if(!item){
+            delete this._items[this._getIndex(x,y)];
+            return;
+        }
+
         if(this.boundX){
             if(x < 0 || x > this.boundX){
                 return;
@@ -36,6 +41,7 @@ export default class ItemGrid {
      */
     listItems = () => {
         return Object.keys(this._items).map(key => {
+            console.log(key + " " + this._items[key]);
             return this._items[key];
         })
     }
