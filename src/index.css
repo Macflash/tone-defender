@@ -12,3 +12,8 @@ canvas {
   left: 5px;
   position:absolute;
 }
+
+#root{
+  height:100%;
+  width:100%;
+}

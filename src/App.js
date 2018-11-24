@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import * as Tone from 'tone';
 
 class Cnv {
-  constructor(name){
+  constructor(name) {
     this.name = name;
     this.canvas = document.getElementById(this.name);
     this.ctx = this.canvas.getContext('2d');
   }
-  
+
   reSize(width, height) {
     if (!window || !this.canvas) { return; }
     this.canvas.width = width;
@@ -53,13 +53,13 @@ class App extends Component {
 
   speedUp = () => {
     this.setState(state => {
-     return {...state, bpm: state.bpm + 20};
+      return { ...state, bpm: state.bpm + 20 };
     }, this.setTempoFromState);
   }
 
   slowDown = () => {
     this.setState(state => {
-     return {...state, bpm: state.bpm - 20};
+      return { ...state, bpm: state.bpm - 20 };
     }, this.setTempoFromState);
   }
 
@@ -86,25 +86,34 @@ class App extends Component {
 
   reSize() {
     if (!window) { return; }
-    this.vpWidth = window.innerWidth - 10;
-    this.vpHeight = window.innerHeight - 10;
 
-    this.terrain.reSize(this.vpWidth, this.vpHeight);
-    this.tower.reSize(this.vpWidth, this.vpHeight);
-    this.enemy.reSize(this.vpWidth, this.vpHeight);
-    this.ui.reSize(this.vpWidth, this.vpHeight);
+    const newWidth = window.innerWidth - 10;
+    const newHeight = window.innerHeight - 100;
+    const tileSize = Math.floor(Math.min(newWidth / this.tWidth, newHeight / this.tHeight));
 
-    this.reDraw();
+    this.setState({
+      vpWidth: tileSize * this.tWidth,
+      vpHeight: tileSize * this.tHeight,
+    }, () => {
+
+      this.terrain.reSize(this.state.vpWidth, this.state.vpHeight);
+      this.tower.reSize(this.state.vpWidth, this.state.vpHeight);
+      this.enemy.reSize(this.state.vpWidth, this.state.vpHeight);
+      this.ui.reSize(this.state.vpWidth, this.state.vpHeight);
+
+      this.reDraw();
+    });
+
   }
 
   reDraw() {
     if (!this.terrain) { return; }
 
-    this.terrain.ctx.clearRect(0, 0, this.vpWidth, this.vpHeight);
+    this.terrain.ctx.clearRect(0, 0, this.state.vpWidth, this.state.vpHeight);
 
     // resulting size of the tiles
     // floor them to avoid aliasing as much as possible
-    const tileSize = Math.floor(Math.min(this.vpWidth / this.tWidth, this.vpHeight / this.tHeight));
+    const tileSize = Math.floor(Math.min(this.state.vpWidth / this.tWidth, this.state.vpHeight / this.tHeight));
 
     for (var x = 0; x < this.tWidth; x++) {
       for (var y = 0; y < this.tHeight; y++) {
@@ -122,28 +131,22 @@ class App extends Component {
 
   render() {
     this.reDraw();
-    return <div>
-      <div style={{ color: "white", padding: "5px" }}>
+    return <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div style={{ position: "relative", flex: "none", height: this.state.vpHeight, padding: "5px" }}>
+        <canvas id="terrainCanvas" style={{ zIndex: "10" }} />
+        <canvas id="towerCanvas" style={{ zIndex: "20" }} />
+        <canvas id="enemyCanvas" style={{ zIndex: "30" }} />
+        <canvas id="uiCanvas" style={{ zIndex: "40" }} />
+      </div>
+      <div style={{ color: "white", padding: "5px", flex: "none", display: "flex", justifyContent: "center" }}>
+        <button onClick={this.slowDown} disabled={this.state.bpm < 60}>-</button>
+
         {this.state.running
           ? <button onClick={this.stop}>Stop</button>
           : <button onClick={this.start}>Start</button>
         }
 
-        {this.state.bpm > 60
-          ? <button onClick={this.slowDown}>-</button>
-          : null}
-
-        {this.state.bpm.toString().toUpperCase()} BPM
-
-      {this.state.bpm < 160
-          ? <button onClick={this.speedUp}>+</button>
-          : null}
-      </div>
-      <div style={{ position: "relative" }}>
-        <canvas id="terrainCanvas" style={{zIndex: "10"}} />
-        <canvas id="towerCanvas" style={{zIndex: "20"}} />
-        <canvas id="enemyCanvas" style={{zIndex: "30"}} />
-        <canvas id="uiCanvas" style={{zIndex: "40"}} />
+        <button onClick={this.speedUp} disabled={this.state.bpm > 160}>+</button>
       </div>
     </div>
   }
