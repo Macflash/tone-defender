@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
 import * as Tone from 'tone';
-
-class Cnv {
-  constructor(name) {
-    this.name = name;
-    this.canvas = document.getElementById(this.name);
-    this.ctx = this.canvas.getContext('2d');
-  }
-
-  reSize(width, height) {
-    if (!window || !this.canvas) { return; }
-    this.canvas.width = width;
-    this.canvas.height = height;
-  }
-}
+import Layer from './layers/layer';
+import Terrain from './layers/terrain';
+import Towers from './layers/towers';
 
 class App extends Component {
   tHeight = 8;
@@ -29,11 +18,10 @@ class App extends Component {
 
   componentDidMount() {
     // Init Canvas components
-    this.terrain = new Cnv("terrainCanvas");
-    this.tower = new Cnv("towerCanvas");
-    this.enemy = new Cnv("enemyCanvas");
-    this.ui = new Cnv("uiCanvas");
-
+    this.terrain = new Terrain("terrainCanvas", this.tWidth, this.tHeight );
+    this.towers = new Towers("towerCanvas", this.tWidth, this.tHeight);
+    this.enemy = new Layer("enemyCanvas", this.tWidth, this.tHeight);
+    this.ui = new Layer("uiCanvas", this.tWidth, this.tHeight);
 
     this.reSize();
     window.addEventListener('resize', () => { this.reSize() }, false);
@@ -43,7 +31,6 @@ class App extends Component {
     Tone.Transport.start()
 
     //create a synth and connect it to the master output (your speakers)
-    this.synth = new Tone.Synth().toMaster();
     this.loop = new Tone.Loop(this.onLoop, "4n");
   }
 
@@ -71,7 +58,9 @@ class App extends Component {
       }
       return { ...state, currentColumn };
     });
-    this.synth.triggerAttackRelease('C0', '8n', time);
+
+    this.terrain.update(time, this.state);
+    this.towers.update(time, this.state);
   }
 
   start = () => {
@@ -86,7 +75,6 @@ class App extends Component {
 
   reSize() {
     if (!window) { return; }
-
     const newWidth = window.innerWidth - 10;
     const newHeight = window.innerHeight - 100;
     const tileSize = Math.floor(Math.min(newWidth / this.tWidth, newHeight / this.tHeight));
@@ -95,12 +83,10 @@ class App extends Component {
       vpWidth: tileSize * this.tWidth,
       vpHeight: tileSize * this.tHeight,
     }, () => {
-
-      this.terrain.reSize(this.state.vpWidth, this.state.vpHeight);
-      this.tower.reSize(this.state.vpWidth, this.state.vpHeight);
-      this.enemy.reSize(this.state.vpWidth, this.state.vpHeight);
-      this.ui.reSize(this.state.vpWidth, this.state.vpHeight);
-
+      this.terrain.reSize(tileSize);
+      this.towers.reSize(tileSize);
+      this.enemy.reSize(tileSize);
+      this.ui.reSize(tileSize);
       this.reDraw();
     });
 
@@ -108,29 +94,12 @@ class App extends Component {
 
   reDraw() {
     if (!this.terrain) { return; }
-
-    this.terrain.ctx.clearRect(0, 0, this.state.vpWidth, this.state.vpHeight);
-
-    // resulting size of the tiles
-    // floor them to avoid aliasing as much as possible
-    const tileSize = Math.floor(Math.min(this.state.vpWidth / this.tWidth, this.state.vpHeight / this.tHeight));
-
-    for (var x = 0; x < this.tWidth; x++) {
-      for (var y = 0; y < this.tHeight; y++) {
-        if (x === this.state.currentColumn) {
-          this.terrain.ctx.fillStyle = '#333';
-          this.terrain.ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-        }
-
-        this.terrain.ctx.strokeStyle = '#555';
-        this.terrain.ctx.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
-      }
-    }
-
+    this.terrain.reDraw(this.state);
+    this.towers.reDraw(this.state);
   }
 
   render() {
-    this.reDraw();
+    // TODO: center the canvases in the middle, after resizes
     return <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div style={{ position: "relative", flex: "none", height: this.state.vpHeight, padding: "5px" }}>
         <canvas id="terrainCanvas" style={{ zIndex: "10" }} />
