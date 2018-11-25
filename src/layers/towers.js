@@ -12,7 +12,7 @@ export default class Towers extends Layer {
      */
     constructor(name, width, height) {
         super(name, width, height);
-        this.towerGrid = new ItemGrid(width, height);
+        this.towers = new ItemGrid(width, height);
         this.projectiles = new ItemGrid(width, height);
     }
 
@@ -20,7 +20,7 @@ export default class Towers extends Layer {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 var projectiles = this.projectiles.getCell(x,y);
-                var tower = this.towerGrid.getCell(x,y);
+                var tower = this.towers.getCell(x,y);
                 if(tower && projectiles && projectiles.length){
                     // we have a collision (set strength to .5 for now)
                     // TODO we need to save the other projectiles created here
@@ -44,22 +44,10 @@ export default class Towers extends Layer {
                     // loop through all the projectiles and move them
                     // watch out we are still IN the loop
                     for (const projectile of projectiles) {
-                        switch (projectile.direction) {
-                            case 0: //right
-                                movedProjectiles.mergeCell(x + 1, y, [projectile]);
-                                break;
-
-                            case 1: //down
-                                movedProjectiles.mergeCell(x, y + 1, [projectile]);
-                                break;
-
-                            case 2: //left
-                                movedProjectiles.mergeCell(x - 1, y, [projectile]);
-                                break;
-
-                            case 3: //up
-                                movedProjectiles.mergeCell(x, y - 1, [projectile]);
-                                break;
+                        //{{x: number, y: number, destroyProjectile: boolean}}
+                        const movement = projectile.move();
+                        if(!movement.destroyProjectile){
+                            movedProjectiles.mergeCell(x + movement.x, y + movement.y, [projectile]);
                         }
                     }
                 }
@@ -79,7 +67,7 @@ export default class Towers extends Layer {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 if (x == pulseColumn) {
-                    const tower = this.towerGrid.getCell(x, y);
+                    const tower = this.towers.getCell(x, y);
                     if (tower) {
                         var newProjectiles = tower.activate(this.notes[y], time, 1);
                         this.projectiles.mergeCell(x, y, newProjectiles);
@@ -95,7 +83,7 @@ export default class Towers extends Layer {
      */
     reSize(tileSize) {
         super.reSize(tileSize);
-        this.towerGrid.listItems().forEach(t => t.reSize(tileSize));
+        this.towers.listItems().forEach(t => t.reSize(tileSize));
         this.projectiles.listItems().forEach(pl => pl.forEach(p => p.reSize(tileSize)));
     }
 
@@ -103,7 +91,7 @@ export default class Towers extends Layer {
         this.ctx.clearRect(0, 0, this.tileSize * this.width, this.tileSize * this.height);
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                const tower = this.towerGrid.getCell(x, y);
+                const tower = this.towers.getCell(x, y);
                 if (tower) {
                     //TODO: we should let tower decide when to redraw //tower.reDraw(state);
                     const offX = x * this.tileSize;

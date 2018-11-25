@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import * as Tone from 'tone';
-import Layer from './layers/layer';
 import Terrain from './layers/terrain';
 import Towers from './layers/towers';
 import Ui from './layers/ui';
 import Shooter from './towers/shooter';
+import Pulser from './towers/pulser';
 import Ticker from './utils/ticker';
 import Base from './towers/base';
+import Enemies from './layers/enemies';
+import Walker from './enemies/walker';
 
 class App extends Component {
   tHeight = 8;
@@ -20,11 +22,14 @@ class App extends Component {
   }
 
   handleUiClick = (x, y) => {
-    var cell = this.towers.towerGrid.getCell(x, y);
+    var cell = this.towers.towers.getCell(x, y);
     if (cell) { // cell has a tower
-      if(cell instanceof Shooter){ // rotate and delete shooter turrets
+      if (cell instanceof Pulser) {
+        this.towers.towers.setCell(x, y, new Shooter(0, this.tileSize));
+      }
+      if (cell instanceof Shooter) { // rotate and delete shooter turrets
         if (cell.direction >= 3) {
-          this.towers.towerGrid.setCell(x, y, undefined);
+          this.towers.towers.setCell(x, y, undefined);
         }
         else {
           cell.direction++;
@@ -33,7 +38,7 @@ class App extends Component {
         // otherwise no-op, don't change other towers
       }
     } else { // Cell is empty
-      this.towers.towerGrid.setCell(x, y, new Shooter(0, this.tileSize));
+      this.towers.towers.setCell(x, y, new Pulser(0, this.tileSize));
     }
 
     this.reSize();
@@ -44,12 +49,13 @@ class App extends Component {
     // Init Canvas components
     this.terrain = new Terrain("terrainCanvas", this.tWidth, this.tHeight);
     this.towers = new Towers("towerCanvas", this.tWidth, this.tHeight);
-    this.enemy = new Layer("enemyCanvas", this.tWidth, this.tHeight);
+    this.enemies = new Enemies("enemyCanvas", this.tWidth, this.tHeight);
     this.ui = new Ui("uiCanvas", this.tWidth, this.tHeight, this.handleUiClick);
 
     this.reSize();
 
-    this.towers.towerGrid.setCell(7,5, new Base(this.tWidth, new Tone.Synth().toMaster()));
+    this.enemies.enemies.setCell(1, 1, [new Walker(this.tWidth, new Tone.Synth().toMaster())]);
+    this.towers.towers.setCell(7, 5, new Base(this.tWidth, new Tone.Synth().toMaster()));
 
     window.addEventListener('resize', () => { this.reSize() }, false);
 
@@ -104,6 +110,7 @@ class App extends Component {
 
     // handle 16 note events
     // CHECK FOR COLLISIONS??
+    this.enemies.reDraw();
 
   }
 
@@ -129,7 +136,7 @@ class App extends Component {
     }, () => {
       this.terrain.reSize(this.tileSize);
       this.towers.reSize(this.tileSize);
-      this.enemy.reSize(this.tileSize);
+      this.enemies.reSize(this.tileSize);
       this.ui.reSize(this.tileSize);
       this.reDraw();
     });
@@ -140,6 +147,7 @@ class App extends Component {
     if (!this.terrain) { return; }
     this.terrain.reDraw(this.pulseColumn.current);
     this.towers.reDraw(this.pulseColumn.current);
+    this.enemies.reDraw(this.pulseColumn.current);
   }
 
   render() {

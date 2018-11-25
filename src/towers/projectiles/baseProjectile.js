@@ -1,18 +1,15 @@
 import * as Tone from 'tone';
 import TileEntity from '../../utils/tileEntity';
-import BaseProjectile from './baseProjectile';
 
-export default class Shot extends BaseProjectile {
+export default class BaseProjectile extends TileEntity {
     /**
-     * Create a new basic shooter
-     * @param {number} direction 
+     * Create a new basic projectile
      * @param {number} tileSize 
      * @param {number} strength 
      */
-    constructor(direction, tileSize, strength) {
+    constructor(tileSize, strength) {
         super(tileSize, new Tone.Synth().toMaster());
         this.strength = strength;
-        this.direction = direction;
         this.reDraw();
     }
 
@@ -22,25 +19,6 @@ export default class Shot extends BaseProjectile {
      */
     move() {
         // by default don't move, and don't decay (lessen strength)
-        switch (this.direction) {
-            case 0: //right
-                return { x: 1, y: 0 };
-            case 0.5: //down right
-                return { x: 1, y: 1 };
-            case 1: //down
-                return { x: 0, y: 1 };
-            case 1.5: //down left
-                return { x: -1, y: 1 };
-            case 2: //left
-                return { x: -1, y: 0 };
-            case 2.5: //left up
-                return { x: -1, y: -1 };
-            case 3: //up
-                return { x: 0, y: -1 };
-            case 3.5: //up right
-                return { x: 1, y: -1 };
-        }
-
         return { x: 0, y: 0 };
     }
 
@@ -60,5 +38,17 @@ export default class Shot extends BaseProjectile {
     onTowerHit() {
         // todo: handle damage or something here?
         // handle like splitting or creating new projectiles?
+    }
+
+    /**
+     * Redraw the basic shooter image
+     * @param {*} state 
+     */
+    reDraw(state) {
+        // can implement in other class!
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = 'cyan';
+        var pad = this.canvas.width * (0.35 * (1.5 - this.strength));
+        this.ctx.fillRect(Math.floor(pad), Math.floor(pad), Math.floor(this.canvas.width - (2 * pad)), Math.floor(this.canvas.height - (2 * pad)));
     }
 }

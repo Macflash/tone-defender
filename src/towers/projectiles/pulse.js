@@ -1,18 +1,19 @@
 import * as Tone from 'tone';
 import TileEntity from '../../utils/tileEntity';
 import BaseProjectile from './baseProjectile';
+import Shot from './shot';
 
-export default class Shot extends BaseProjectile {
+export default class Pulse extends Shot {
     /**
      * Create a new basic shooter
+     * @param {number} lifeSpan 
      * @param {number} direction 
      * @param {number} tileSize 
      * @param {number} strength 
      */
-    constructor(direction, tileSize, strength) {
-        super(tileSize, new Tone.Synth().toMaster());
-        this.strength = strength;
-        this.direction = direction;
+    constructor(lifeSpan, direction, tileSize, strength) {
+        super(direction, tileSize, strength);
+        this.lifeSpan = lifeSpan + 1; // this is to make it simpler. EG. 1 is 1 tile, 2 is 2 tiles
         this.reDraw();
     }
 
@@ -21,27 +22,17 @@ export default class Shot extends BaseProjectile {
      * @returns {{x: number, y: number, destroyProjectile: boolean}}
      */
     move() {
-        // by default don't move, and don't decay (lessen strength)
-        switch (this.direction) {
-            case 0: //right
-                return { x: 1, y: 0 };
-            case 0.5: //down right
-                return { x: 1, y: 1 };
-            case 1: //down
-                return { x: 0, y: 1 };
-            case 1.5: //down left
-                return { x: -1, y: 1 };
-            case 2: //left
-                return { x: -1, y: 0 };
-            case 2.5: //left up
-                return { x: -1, y: -1 };
-            case 3: //up
-                return { x: 0, y: -1 };
-            case 3.5: //up right
-                return { x: 1, y: -1 };
-        }
+        var movement = super.move();
+        var decayRate = (this.lifeSpan - 1) / this.lifeSpan;
+        this.strength *= decayRate;
+        this.lifeSpan--;
+        this.reDraw();
 
-        return { x: 0, y: 0 };
+        return { 
+            x: movement.x, 
+            y: movement.y, 
+            destroyProjectile: this.lifeSpan <= 0 || this.strength <= 0 
+        };
     }
 
     /**

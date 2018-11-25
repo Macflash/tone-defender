@@ -10,9 +10,7 @@ export default class TileEntity {
      */
     constructor(tileSize, instrument){
         this.instrument = instrument;
-        this.tileSize = tileSize;
-        this.canvas.width = this.tileSize;
-        this.canvas.height = this.tileSize;
+        this.reSize(tileSize);
     }
 
     /**
@@ -41,8 +39,7 @@ export default class TileEntity {
      * @param {number} strength
      */
     activate(pitch, time, strength){
-        // TODO: this should be overridden
-        console.log("base tile entity activated");
+        // this can should be overridden
         this.instrument.triggerAttackRelease(pitch, "32n", time, strength);
     }
 }
