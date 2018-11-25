@@ -1,6 +1,6 @@
 export default class Ticker {
     constructor(ticks){
-        this.ticks = ticks - 1;
+        this.ticks = ticks;
         this.current = ticks;
     }
 

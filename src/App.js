@@ -43,6 +43,7 @@ class App extends Component {
     Tone.Transport.start()
 
     //create a synth and connect it to the master output (your speakers)
+    this.pulseColumn = new Ticker(this.tWidth);
     this.quarter = new Ticker(4);
     this.eighth = new Ticker(2);
     this.loop = new Tone.Loop(this.onLoop, "16n");
@@ -71,14 +72,9 @@ class App extends Component {
   onLoop = (time) => {
     // handle quarter note events
     if(this.quarter.tick()){
-      this.setState((state) => {
-        let currentColumn = this.state.currentColumn + 1;
-        if (currentColumn >= this.tWidth) {
-          currentColumn = 0;
-        }
-        return { ...state, currentColumn };
-      });
-      
+      this.pulseColumn.tick();
+      this.terrain.columnPulse(time, this.pulseColumn.current);
+      this.towers.columnPulse(time, this.pulseColumn.current);
     }
 
     // handle eighth note events
@@ -87,10 +83,8 @@ class App extends Component {
     }
 
     // handle 16 note events
+    // CHECK FOR COLLISIONS??
 
-
-    this.terrain.update(time, this.state);
-    this.towers.update(time, this.state);
   }
 
   start = () => {
@@ -124,8 +118,8 @@ class App extends Component {
 
   reDraw() {
     if (!this.terrain) { return; }
-    this.terrain.reDraw(this.state);
-    this.towers.reDraw(this.state);
+    this.terrain.reDraw(this.pulseColumn.current);
+    this.towers.reDraw(this.pulseColumn.current);
   }
 
   render() {

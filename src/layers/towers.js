@@ -17,13 +17,13 @@ export default class Towers extends Layer {
     /**
      * Update the towers layer
      * @param {number} time 
-     * @param {*} state 
+     * @param {number} pulseColumn 
      */
-    update(time, state){
+    columnPulse(time, pulseColumn){
         // activate the correct towers, and handle collisions
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                if(x == state.currentColumn){
+                if(x == pulseColumn){
                     const tower = this.towerGrid.getCell(x, y);
                     if (tower) {
                         tower.activate(this.notes[y], time);
@@ -42,7 +42,7 @@ export default class Towers extends Layer {
         this.towerGrid.listItems().forEach(t => t.reSize(tileSize));
     }
 
-    reDraw(state) {
+    reDraw() {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 const tower = this.towerGrid.getCell(x, y);
