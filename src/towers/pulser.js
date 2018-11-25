@@ -43,17 +43,16 @@ export default class Pulser extends TileEntity {
     activate(pitch, time, strength) {
         if (strength <= .1) { return []; }
         super.activate(pitch, time, strength);
-        let s = strength * 2;
         //        this.instrument.triggerAttackRelease(pitch, "8n", time, strength);
         return [
-            new Pulse(1, 0, this.tileSize, s),
-            new Pulse(1, 1, this.tileSize, s),
-            new Pulse(1, 2, this.tileSize, s),
-            new Pulse(1, 3, this.tileSize, s),
-            new Pulse(1, 0.5, this.tileSize, s),
-            new Pulse(1, 1.5, this.tileSize, s),
-            new Pulse(1, 2.5, this.tileSize, s),
-            new Pulse(1, 3.5, this.tileSize, s),
+            new Pulse(1, 0, this.tileSize, strength),
+            new Pulse(1, 1, this.tileSize, strength),
+            new Pulse(1, 2, this.tileSize, strength),
+            new Pulse(1, 3, this.tileSize, strength),
+            new Pulse(1, 0.5, this.tileSize, strength),
+            new Pulse(1, 1.5, this.tileSize, strength),
+            new Pulse(1, 2.5, this.tileSize, strength),
+            new Pulse(1, 3.5, this.tileSize, strength),
         ];
     }
 }

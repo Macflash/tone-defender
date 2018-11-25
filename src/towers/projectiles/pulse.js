@@ -12,7 +12,7 @@ export default class Pulse extends Shot {
      * @param {number} strength 
      */
     constructor(lifeSpan, direction, tileSize, strength) {
-        super(direction, tileSize, strength);
+        super(direction, tileSize, strength * ((lifeSpan + 1) / lifeSpan));
         this.lifeSpan = lifeSpan + 1; // this is to make it simpler. EG. 1 is 1 tile, 2 is 2 tiles
         this.reDraw();
     }

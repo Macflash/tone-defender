@@ -62,9 +62,6 @@ export default class Shooter extends TileEntity {
     activate(pitch, time, strength) {
         if(strength <= .1){ return []; }
         super.activate(pitch, time, strength);
-        const range = 7;
-        const s = strength * ((range + 1) / range)
-//        this.instrument.triggerAttackRelease(pitch, "8n", time, strength);
-        return [new Pulse(range, this.direction, this.tileSize, s)];
+        return [new Pulse(7, this.direction, this.tileSize, strength)];
     }
 }
