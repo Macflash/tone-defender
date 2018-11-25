@@ -2,12 +2,23 @@ import Layer from './layer';
 import ItemGrid from '../utils/itemGrid';
 import Shooter from '../towers/shooter';
 export default class Towers extends Layer {
-    notes = ["E4", "F4","B3","A3","G3","E3", "C3", "C2" ];
+    notes = ["F4", "E4","B3","A3","G3","E3", "C3", "C2" ];
+
+    /**
+     * @param {string} name
+     * @param {number} width
+     * @param {number} height
+     */
     constructor(name, width, height) {
         super(name, width, height);
         this.towerGrid = new ItemGrid(width, height);
     }
 
+    /**
+     * Update the towers layer
+     * @param {number} time 
+     * @param {*} state 
+     */
     update(time, state){
         // activate the correct towers, and handle collisions
         for (let x = 0; x < this.width; x++) {
@@ -22,6 +33,10 @@ export default class Towers extends Layer {
         }
     }
 
+    /**
+     * resize the towers layer
+     * @param {number} tileSize 
+     */
     reSize(tileSize){
         super.reSize(tileSize);
         this.towerGrid.listItems().forEach(t => t.reSize(tileSize));

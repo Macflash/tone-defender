@@ -4,6 +4,11 @@ import * as Tone from 'tone';
 export default class Terrain extends Layer {
   pulse = new Tone.Synth().toMaster();
 
+  /**
+   * update the current terrain layer
+   * @param {number} time 
+   * @param {*} state 
+   */
   update(time, state) {
     // TODO: should we update?
     // for now, we assume 4n pulse, and always update
@@ -11,6 +16,10 @@ export default class Terrain extends Layer {
     this.reDraw(state);
   }
 
+  /**
+   * reDraw the current terrain layer
+   * @param {*} state
+   */
   reDraw(state) {
     // TODO: we don't need to clear ALL the terrain unless we have resized
     // TODO: add this optimization later...

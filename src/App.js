@@ -5,6 +5,7 @@ import Terrain from './layers/terrain';
 import Towers from './layers/towers';
 import Ui from './layers/ui';
 import Shooter from './towers/shooter';
+import Ticker from './utils/ticker';
 
 class App extends Component {
   tHeight = 8;
@@ -14,15 +15,14 @@ class App extends Component {
     this.state = {
       running: false,
       bpm: 90,
-      currentColumn: -1,
     };
   }
 
   handleUiClick = (x, y) => {
-    if(this.towers.towerGrid.getCell(x,y)){
-      this.towers.towerGrid.setCell(x,y, undefined);
-    }else{
-      this.towers.towerGrid.setCell(x,y, new Shooter());
+    if (this.towers.towerGrid.getCell(x, y)) {
+      this.towers.towerGrid.setCell(x, y, undefined);
+    } else {
+      this.towers.towerGrid.setCell(x, y, new Shooter());
     }
     this.reSize();
     this.towers.reDraw();
@@ -30,7 +30,7 @@ class App extends Component {
 
   componentDidMount() {
     // Init Canvas components
-    this.terrain = new Terrain("terrainCanvas", this.tWidth, this.tHeight );
+    this.terrain = new Terrain("terrainCanvas", this.tWidth, this.tHeight);
     this.towers = new Towers("towerCanvas", this.tWidth, this.tHeight);
     this.enemy = new Layer("enemyCanvas", this.tWidth, this.tHeight);
     this.ui = new Ui("uiCanvas", this.tWidth, this.tHeight, this.handleUiClick);
@@ -43,7 +43,9 @@ class App extends Component {
     Tone.Transport.start()
 
     //create a synth and connect it to the master output (your speakers)
-    this.loop = new Tone.Loop(this.onLoop, "4n");
+    this.quarter = new Ticker(4);
+    this.eighth = new Ticker(2);
+    this.loop = new Tone.Loop(this.onLoop, "16n");
   }
 
   setTempoFromState = () => {
@@ -62,14 +64,30 @@ class App extends Component {
     }, this.setTempoFromState);
   }
 
+  /**
+   * 
+   * @param {number} time 
+   */
   onLoop = (time) => {
-    this.setState((state) => {
-      let currentColumn = this.state.currentColumn + 1;
-      if (currentColumn >= this.tWidth) {
-        currentColumn = 0;
-      }
-      return { ...state, currentColumn };
-    });
+    // handle quarter note events
+    if(this.quarter.tick()){
+      this.setState((state) => {
+        let currentColumn = this.state.currentColumn + 1;
+        if (currentColumn >= this.tWidth) {
+          currentColumn = 0;
+        }
+        return { ...state, currentColumn };
+      });
+      
+    }
+
+    // handle eighth note events
+    if(this.eighth.tick()){
+
+    }
+
+    // handle 16 note events
+
 
     this.terrain.update(time, this.state);
     this.towers.update(time, this.state);

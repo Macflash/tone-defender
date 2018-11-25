@@ -1,6 +1,11 @@
 export default class ItemGrid {
     // grid can have bounds, but they are OPTIONAL
     // items that go beond the bounds are NOT SET
+    /**
+     * Creates a new ItemGrid with optional boundaries
+     * @param {number?} boundX
+     * @param {number?} boundY
+     */
     constructor(boundX, boundY){
         this._items = {};
         this.boundX = boundX;
@@ -12,6 +17,13 @@ export default class ItemGrid {
         return x + "," + y;
     }
 
+    /**
+     * Get the item in a cell
+     * @param {number} x
+     * @param {number} y
+     * @param {*} item
+     * @returns {void}
+     */
     setCell = (x, y, item) => {
         if(!item){
             delete this._items[this._getIndex(x,y)];
@@ -32,12 +44,19 @@ export default class ItemGrid {
         this._items[this._getIndex(x,y)] = item;
     }
 
+    /**
+     * Get the item in a cell
+     * @param {number} x
+     * @param {number} y
+     * @returns {any}
+     */
     getCell = (x, y) => {
         return this._items[this._getIndex(x,y)];
     }
 
     /**
-     * not sorted
+     * Get all the items in the grid (not sorted!)
+     * @returns {any[]}
      */
     listItems = () => {
         return Object.keys(this._items).map(key => {
