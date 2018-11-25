@@ -20,8 +20,14 @@ class App extends Component {
   }
 
   handleUiClick = (x, y) => {
-    if (this.towers.towerGrid.getCell(x, y)) {
-      this.towers.towerGrid.setCell(x, y, undefined);
+    var cell = this.towers.towerGrid.getCell(x, y);
+    if (cell) {
+      if(cell.direction >= 3){
+        this.towers.towerGrid.setCell(x, y, undefined);
+      }
+      else{
+        cell.direction++;
+      }
     } else {
       this.towers.towerGrid.setCell(x, y, new Shooter(0, this.tileSize));
     }

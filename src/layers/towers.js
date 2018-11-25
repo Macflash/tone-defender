@@ -23,7 +23,12 @@ export default class Towers extends Layer {
                 if(tower && projectiles && projectiles.length){
                     // we have a collision (set strength to .5 for now)
                     // TODO we need to save the other projectiles created here
-                    tower.activate(this.notes[y], time, 0.5);
+                    var sum = 0;
+                    projectiles.forEach((p) => {
+                        sum += p.strength
+                    });
+                    console.log(sum);
+                    this.projectiles.mergeCell(x, y, tower.activate(this.notes[y], time, 0.5 * sum));
                 }
             }
         }
@@ -76,10 +81,8 @@ export default class Towers extends Layer {
                 if (x == pulseColumn) {
                     const tower = this.towerGrid.getCell(x, y);
                     if (tower) {
-                        var newProjectiles = tower.activate(this.notes[y], time);
-                        console.log(newProjectiles && newProjectiles.length);
+                        var newProjectiles = tower.activate(this.notes[y], time, 1);
                         this.projectiles.mergeCell(x, y, newProjectiles);
-                        console.log(this.projectiles.getCell(x, y).length);
                     }
                 }
             }
@@ -116,7 +119,6 @@ export default class Towers extends Layer {
                     const offY = y * this.tileSize;
 
                     for (const projectile of projectiles) {
-                        console.log("drawing!");
                         //debugger;
                         //this.ctx.clearRect(offX, offY, this.tileSize, this.tileSize);
                         this.ctx.drawImage(projectile.canvas, offX, offY);

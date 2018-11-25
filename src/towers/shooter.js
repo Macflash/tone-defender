@@ -7,12 +7,12 @@ export default class Shooter {
      * @param {number} direction 
      * @param {number} tileSize 
      */
-    constructor(direction, tileSize){
-        if(!tileSize){throw "need tilesize!!";}
+    constructor(direction, tileSize) {
+        if (!tileSize) { throw "need tilesize!!"; }
         this.direction = direction;
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.pulse = new Tone.Synth().toMaster();
+        this.pulse = new Tone.PolySynth().toMaster();
         this.reSize(tileSize);
     }
 
@@ -20,7 +20,7 @@ export default class Shooter {
      * Resize the shooter
      * @param {number} tileSize
      */
-    reSize(tileSize){
+    reSize(tileSize) {
         this.tileSize = tileSize;
         this.canvas.width = this.tileSize;
         this.canvas.height = this.tileSize;
@@ -29,14 +29,39 @@ export default class Shooter {
 
     /**
      * Redraw the basic shooter image
-     * @param {*} state 
      */
-    reDraw(state){
-        this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+    reDraw() {
+        console.log("redrawing shooter");
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = '#A0A0A0';
 
-        var pad = this.canvas.width * 0.1;
-        this.ctx.fillRect(Math.floor(pad), Math.floor(pad), Math.floor(this.canvas.width - (2 * pad)), Math.floor(this.canvas.height - (2 * pad)));
+        const pad = Math.floor(this.canvas.width * 0.1);
+        const pad2 = 2 * pad;
+        const pad4 = 4 * pad;
+        this.ctx.fillRect(pad, pad, Math.floor(this.canvas.width - (pad2)), Math.floor(this.canvas.height - (pad2)));
+
+        switch (this.direction) {
+            case 0: //right
+                this.ctx.clearRect(this.canvas.width - pad4, 0, pad4, pad4);
+                this.ctx.clearRect(this.canvas.width - pad4, this.canvas.height - pad4, pad4, pad4);
+                break;
+
+            case 1: //down
+                this.ctx.clearRect(this.canvas.width - pad4, this.canvas.height - pad4, pad4, pad4);
+                this.ctx.clearRect(0, this.canvas.height - pad4, pad4, pad4);
+                break;
+
+            case 2: //left
+                this.ctx.clearRect(0, this.canvas.height - pad4, pad4, pad4);
+                this.ctx.clearRect(0, 0, pad4, pad4);
+                break;
+
+            case 3: //up
+                this.ctx.clearRect(this.canvas.width - pad4, 0, pad4, pad4);
+                this.ctx.clearRect(0, 0, pad4, pad4);
+                break;
+        }
+
     }
 
     // think it would be cool to have the pitches be different based on how it was activated?
@@ -50,8 +75,9 @@ export default class Shooter {
      * @param {number} strength
      * @returns {any[]}
      */
-    activate(pitch, time, strength){
-        this.pulse.triggerAttackRelease(pitch, "8n", time);
-        return [new Shot(this.direction, this.tileSize)];
+    activate(pitch, time, strength) {
+        if(strength <= .1){ return []; }
+        this.pulse.triggerAttackRelease(pitch, "8n", time, strength);
+        return [new Shot(this.direction, this.tileSize, strength)];
     }
 }
