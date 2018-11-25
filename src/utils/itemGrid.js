@@ -21,6 +21,21 @@ export default class ItemGrid {
      * Get the item in a cell
      * @param {number} x
      * @param {number} y
+     * @param {any[]} item
+     * @returns {void}
+     */
+    mergeCell = (x,y, items) => {
+        if(!items || ! items.length){return;}
+        let currentContents = this.getCell(x,y);
+        if(!currentContents || !currentContents.length){ currentContents = [];}
+        let newContents = currentContents.concat(items);
+        this.setCell(x,y, newContents);
+    }
+
+    /**
+     * Get the item in a cell
+     * @param {number} x
+     * @param {number} y
      * @param {*} item
      * @returns {void}
      */

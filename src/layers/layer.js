@@ -14,7 +14,12 @@ export default class Layer {
     this.canvas.height = tileSize * this.height;
   }
 
-  update(time, state) {
+  /**
+   * 
+   * @param {number} time 
+   * @param {number} pulseColumn 
+   */
+  pulseColumn(time, pulseColumn) {
     throw "Should be implemented by child class!";
-  }
+  }  
 }

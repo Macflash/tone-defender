@@ -13,7 +13,7 @@ export default class Ui extends Layer {
     clickHandler = (ev) => {
         const clickX = Math.floor(ev.offsetX / this.tileSize);
         const clickY = Math.floor(ev.offsetY / this.tileSize);
-        console.log("click on " + clickX + "," + clickY);
+        //console.log("click on " + clickX + "," + clickY);
         if (this.onClick) { this.onClick(clickX, clickY); }
     }
 

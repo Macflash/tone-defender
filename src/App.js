@@ -6,6 +6,7 @@ import Towers from './layers/towers';
 import Ui from './layers/ui';
 import Shooter from './towers/shooter';
 import Ticker from './utils/ticker';
+import ItemGrid from './utils/itemGrid';
 
 class App extends Component {
   tHeight = 8;
@@ -22,7 +23,7 @@ class App extends Component {
     if (this.towers.towerGrid.getCell(x, y)) {
       this.towers.towerGrid.setCell(x, y, undefined);
     } else {
-      this.towers.towerGrid.setCell(x, y, new Shooter());
+      this.towers.towerGrid.setCell(x, y, new Shooter(0, this.tileSize));
     }
     this.reSize();
     this.towers.reDraw();
@@ -71,15 +72,20 @@ class App extends Component {
    */
   onLoop = (time) => {
     // handle quarter note events
-    if(this.quarter.tick()){
+    if (this.quarter.tick()) {
       this.pulseColumn.tick();
       this.terrain.columnPulse(time, this.pulseColumn.current);
       this.towers.columnPulse(time, this.pulseColumn.current);
     }
 
     // handle eighth note events
-    if(this.eighth.tick()){
+    if (this.eighth.tick()) {
+      this.towers.moveProjectiles();
 
+      // check for collisions?
+      this.towers.checkForTowerProjectileCollisions(time);
+
+      this.towers.reDraw();
     }
 
     // handle 16 note events
@@ -101,16 +107,16 @@ class App extends Component {
     if (!window) { return; }
     const newWidth = window.innerWidth - 10;
     const newHeight = window.innerHeight - 100;
-    const tileSize = Math.floor(Math.min(newWidth / this.tWidth, newHeight / this.tHeight));
+    this.tileSize = Math.floor(Math.min(newWidth / this.tWidth, newHeight / this.tHeight));
 
     this.setState({
-      vpWidth: tileSize * this.tWidth,
-      vpHeight: tileSize * this.tHeight,
+      vpWidth: this.tileSize * this.tWidth,
+      vpHeight: this.tileSize * this.tHeight,
     }, () => {
-      this.terrain.reSize(tileSize);
-      this.towers.reSize(tileSize);
-      this.enemy.reSize(tileSize);
-      this.ui.reSize(tileSize);
+      this.terrain.reSize(this.tileSize);
+      this.towers.reSize(this.tileSize);
+      this.enemy.reSize(this.tileSize);
+      this.ui.reSize(this.tileSize);
       this.reDraw();
     });
 
