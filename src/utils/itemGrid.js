@@ -75,7 +75,6 @@ export default class ItemGrid {
      */
     listItems = () => {
         return Object.keys(this._items).map(key => {
-            console.log(key + " " + this._items[key]);
             return this._items[key];
         })
     }

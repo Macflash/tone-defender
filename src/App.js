@@ -6,7 +6,7 @@ import Towers from './layers/towers';
 import Ui from './layers/ui';
 import Shooter from './towers/shooter';
 import Ticker from './utils/ticker';
-import ItemGrid from './utils/itemGrid';
+import Base from './towers/base';
 
 class App extends Component {
   tHeight = 8;
@@ -21,16 +21,21 @@ class App extends Component {
 
   handleUiClick = (x, y) => {
     var cell = this.towers.towerGrid.getCell(x, y);
-    if (cell) {
-      if (cell.direction >= 3) {
-        this.towers.towerGrid.setCell(x, y, undefined);
+    if (cell) { // cell has a tower
+      if(cell instanceof Shooter){ // rotate and delete shooter turrets
+        if (cell.direction >= 3) {
+          this.towers.towerGrid.setCell(x, y, undefined);
+        }
+        else {
+          cell.direction++;
+        }
+
+        // otherwise no-op, don't change other towers
       }
-      else {
-        cell.direction++;
-      }
-    } else {
+    } else { // Cell is empty
       this.towers.towerGrid.setCell(x, y, new Shooter(0, this.tileSize));
     }
+
     this.reSize();
     this.towers.reDraw();
   }
@@ -43,6 +48,9 @@ class App extends Component {
     this.ui = new Ui("uiCanvas", this.tWidth, this.tHeight, this.handleUiClick);
 
     this.reSize();
+
+    this.towers.towerGrid.setCell(7,5, new Base(this.tWidth, new Tone.Synth().toMaster()));
+
     window.addEventListener('resize', () => { this.reSize() }, false);
 
     // Init transport

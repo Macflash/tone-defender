@@ -1,29 +1,16 @@
 import * as Tone from 'tone';
 import Shot from './projectiles/shot';
+import TileEntity from '../utils/tileEntity';
 
-export default class Shooter {
+export default class Shooter extends TileEntity {
     /**
      * Create a new basic shooter
      * @param {number} direction 
      * @param {number} tileSize 
      */
     constructor(direction, tileSize) {
-        if (!tileSize) { throw "need tilesize!!"; }
+        super(tileSize, new Tone.PolySynth().toMaster());
         this.direction = direction;
-        this.canvas = document.createElement('canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.pulse = new Tone.PolySynth().toMaster();
-        this.reSize(tileSize);
-    }
-
-    /**
-     * Resize the shooter
-     * @param {number} tileSize
-     */
-    reSize(tileSize) {
-        this.tileSize = tileSize;
-        this.canvas.width = this.tileSize;
-        this.canvas.height = this.tileSize;
         this.reDraw();
     }
 
@@ -31,7 +18,6 @@ export default class Shooter {
      * Redraw the basic shooter image
      */
     reDraw() {
-        console.log("redrawing shooter");
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = '#A0A0A0';
 
@@ -77,7 +63,8 @@ export default class Shooter {
      */
     activate(pitch, time, strength) {
         if(strength <= .1){ return []; }
-        this.pulse.triggerAttackRelease(pitch, "8n", time, strength);
+        super.activate(pitch, time, strength);
+//        this.instrument.triggerAttackRelease(pitch, "8n", time, strength);
         return [new Shot(this.direction, this.tileSize, strength)];
     }
 }

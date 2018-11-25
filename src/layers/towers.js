@@ -1,6 +1,7 @@
 import Layer from './layer';
 import ItemGrid from '../utils/itemGrid';
-import Shooter from '../towers/shooter';
+import Base from '../towers/base';
+
 export default class Towers extends Layer {
     notes = ["F4", "E4", "B3", "A3", "G3", "E3", "C3", "C2"];
 
@@ -27,7 +28,6 @@ export default class Towers extends Layer {
                     projectiles.forEach((p) => {
                         sum += p.strength
                     });
-                    console.log(sum);
                     this.projectiles.mergeCell(x, y, tower.activate(this.notes[y], time, 0.5 * sum));
                 }
             }
