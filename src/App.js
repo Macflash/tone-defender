@@ -22,10 +22,10 @@ class App extends Component {
   handleUiClick = (x, y) => {
     var cell = this.towers.towerGrid.getCell(x, y);
     if (cell) {
-      if(cell.direction >= 3){
+      if (cell.direction >= 3) {
         this.towers.towerGrid.setCell(x, y, undefined);
       }
-      else{
+      else {
         cell.direction++;
       }
     } else {
@@ -143,15 +143,40 @@ class App extends Component {
         <canvas id="enemyCanvas" style={{ zIndex: "30" }} />
         <canvas id="uiCanvas" style={{ zIndex: "40" }} />
       </div>
-      <div style={{ color: "white", padding: "5px", flex: "none", display: "flex", justifyContent: "center" }}>
-        <button onClick={this.slowDown} disabled={this.state.bpm < 60}>-</button>
+      <div style={{ color: "white", padding: "5px", height: "10vw", flex: "none", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div onClick={this.slowDown}
+          disabled={this.state.bpm < 60}
+          style={{
+            cursor: "pointer",
+            margin: "0 10vw",
+            width: 0, height: 0,
+            borderBottom: "3vw solid transparent",
+            borderRight: "4vw solid grey",
+            borderTop: "3vw solid transparent",
+          }}></div>
 
         {this.state.running
-          ? <button onClick={this.stop}>Stop</button>
-          : <button onClick={this.start}>Start</button>
+          ? <div onClick={this.stop} style={{ backgroundColor: "red", width: "8vw", height: "8vw" }}></div>
+          : <div onClick={this.start} style={{
+            cursor: "pointer",
+            width: 0, height: 0,
+            borderTop: "5vw solid transparent",
+            borderLeft: "8vw solid green",
+            borderBottom: "5vw solid transparent",
+          }}></div>
         }
 
-        <button onClick={this.speedUp} disabled={this.state.bpm > 160}>+</button>
+        <div onClick={this.speedUp}
+          disabled={this.state.bpm > 160}
+          style={{
+            cursor: "pointer",
+            margin: "0 10vw",
+            width: 0, height: 0,
+            borderTop: "3vw solid transparent",
+            borderLeft: "4vw solid grey",
+            borderBottom: "3vw solid transparent",
+          }}></div>
+
       </div>
     </div>
   }
