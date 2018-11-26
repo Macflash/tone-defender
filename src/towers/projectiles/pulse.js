@@ -12,7 +12,7 @@ export default class Pulse extends Shot {
      * @param {number} strength 
      */
     constructor(lifeSpan, direction, tileSize, strength) {
-        super(direction, tileSize, strength * ((lifeSpan + 1) / lifeSpan));
+        super(direction, tileSize, strength /* *((lifeSpan + 1) / lifeSpan)*/);
         this.lifeSpan = lifeSpan + 1; // this is to make it simpler. EG. 1 is 1 tile, 2 is 2 tiles
         this.reDraw();
     }
@@ -33,23 +33,5 @@ export default class Pulse extends Shot {
             y: movement.y, 
             destroyProjectile: this.lifeSpan <= 0 || this.strength <= 0 
         };
-    }
-
-    /**
-     * Handle projectile collisions with enemies
-     * @returns {{damage: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
-     */
-    onEnemyHit() {
-        // todo: handle damage or something here?
-        // handle like splitting or creating new projectiles?
-    }
-
-    /**
-     * Handle projectile collisions with towers
-     * @returns {{strength: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
-     */
-    onTowerHit() {
-        // todo: handle damage or something here?
-        // handle like splitting or creating new projectiles?
     }
 }

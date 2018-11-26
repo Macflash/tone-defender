@@ -25,9 +25,21 @@ export default class Towers extends Layer {
                     // we have a collision (set strength to .5 for now)
                     // TODO we need to save the other projectiles created here
                     var sum = 0;
-                    projectiles.forEach((p) => {
-                        sum += p.strength
+                    var surviving = projectiles.filter((p) => {
+                        var hit = p.onTowerHit();
+                        sum += hit.strength;
+                        return !hit.destroyProjectile;
                     });
+
+                    this.projectiles.setCell(x,y, surviving);
+
+                    if(sum > 1.5){
+                        // destroy the tower!
+                        this.towers.setCell(x,y, undefined);
+                    }
+
+                    sum = Math.max(sum, 1);
+
                     this.projectiles.mergeCell(x, y, tower.activate(this.notes[y], time, 0.5 * sum));
                 }
             }

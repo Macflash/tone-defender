@@ -27,8 +27,10 @@ export default class BaseProjectile extends TileEntity {
      * @returns {{damage: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
      */
     onEnemyHit() {
+        this.instrument.dispose();
         // todo: handle damage or something here?
         // handle like splitting or creating new projectiles?
+        return {damage: this.strength, destroyProjectile: true};
     }
 
     /**
@@ -36,8 +38,10 @@ export default class BaseProjectile extends TileEntity {
      * @returns {{strength: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
      */
     onTowerHit() {
+        this.instrument.dispose();
         // todo: handle damage or something here?
         // handle like splitting or creating new projectiles?
+        return {strength: this.strength, destroyProjectile: true};
     }
 
     /**
@@ -47,7 +51,7 @@ export default class BaseProjectile extends TileEntity {
     reDraw(state) {
         // can implement in other class!
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = 'cyan';
+        this.ctx.fillStyle = 'rgba(100,150,255,.8)';
         var pad = this.canvas.width * (0.35 * (1.5 - this.strength));
         this.ctx.fillRect(Math.floor(pad), Math.floor(pad), Math.floor(this.canvas.width - (2 * pad)), Math.floor(this.canvas.height - (2 * pad)));
     }

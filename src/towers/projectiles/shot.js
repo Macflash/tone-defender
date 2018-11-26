@@ -43,22 +43,4 @@ export default class Shot extends BaseProjectile {
 
         return { x: 0, y: 0 };
     }
-
-    /**
-     * Handle projectile collisions with enemies
-     * @returns {{damage: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
-     */
-    onEnemyHit() {
-        // todo: handle damage or something here?
-        // handle like splitting or creating new projectiles?
-    }
-
-    /**
-     * Handle projectile collisions with towers
-     * @returns {{strength: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
-     */
-    onTowerHit() {
-        // todo: handle damage or something here?
-        // handle like splitting or creating new projectiles?
-    }
 }
