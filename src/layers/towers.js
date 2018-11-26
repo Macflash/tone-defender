@@ -38,7 +38,7 @@ export default class Towers extends Layer {
                         this.towers.setCell(x,y, undefined);
                     }
 
-                    sum = Math.max(sum, 1);
+                    sum = Math.min(sum, 1);
 
                     this.projectiles.mergeCell(x, y, tower.activate(this.notes[y], time, 0.5 * sum));
                 }
