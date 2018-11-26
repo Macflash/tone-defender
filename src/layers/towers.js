@@ -33,7 +33,7 @@ export default class Towers extends Layer {
 
                     this.projectiles.setCell(x,y, surviving);
 
-                    if(sum > 1.5){
+                    if(sum > 2){
                         // destroy the tower!
                         this.towers.setCell(x,y, undefined);
                     }

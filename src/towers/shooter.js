@@ -62,6 +62,6 @@ export default class Shooter extends TileEntity {
     activate(pitch, time, strength) {
         if(strength <= .1){ return []; }
         super.activate(pitch, time, strength);
-        return [new Pulse(7, this.direction, this.tileSize, strength)];
+        return [new Shot(this.direction, this.tileSize, strength)];
     }
 }
