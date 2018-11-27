@@ -4,6 +4,7 @@ import ItemGrid from '../utils/itemGrid';
 export default class Enemies extends Layer {
     spawnX = 1;
     spawnY = 0;
+    res = .5;
 
     /**
      * Create a new layer of enemies
@@ -15,6 +16,28 @@ export default class Enemies extends Layer {
         super(name, width, height);
         this.enemies = new ItemGrid(width, height);
         this.path = new ItemGrid(width, height); // TODO: we might not need this?
+    }
+
+    moveEnemies(){
+        var movedEnemies = new ItemGrid(this.width, this.height);
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
+                const enemies = this.enemies.getCell(x, y);
+                            let movement = {x:1, y: 0};
+                    if (enemies && enemies.length) {
+                        for(let enemy of enemies){
+                            let movement = {x:.5, y: 0};
+
+                            console.log("moved");
+                            // move the enemey, for NOW
+                            // lets say.. to the right.
+                            movedEnemies.mergeCell(x + movement.x, y + movement.y, [enemy]);
+                        }
+                    }
+            }
+        }
+
+        this.enemies = movedEnemies;
     }
 
     /**
@@ -29,12 +52,11 @@ export default class Enemies extends Layer {
         // or granting them a shield(?)
         // activate the correct towers, and handle collisions
         for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+            for (let y = 0; y < this.height; y+=this.res) {
                 if (x == pulseColumn) {
                     const enemies = this.enemies.getCell(x, y);
                     if (enemies && enemies.length) {
                         for(let enemy of enemies){
-                            debugger;
                             enemy.activate("A1", time, .5);
                         }
                     }
@@ -58,8 +80,8 @@ export default class Enemies extends Layer {
      */
     reDraw(pulseColumn) {
         this.ctx.clearRect(0, 0, this.tileSize * this.width, this.tileSize * this.height);
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
                 const enemies = this.enemies.getCell(x,y);
                 // let enemies overlap, however we should be able to
                 // visually see which ones are where even if they are in the same tile

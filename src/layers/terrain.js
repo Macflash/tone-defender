@@ -1,8 +1,8 @@
 import Layer from './layer';
-import * as Tone from 'tone';
+import SoundManager from '../utils/soundManager';
 
 export default class Terrain extends Layer {
-  pulse = new Tone.Synth().toMaster();
+  instrument = "beat";
 
   /**
    * update the current terrain layer
@@ -12,7 +12,7 @@ export default class Terrain extends Layer {
   columnPulse(time, pulseColumn) {
     // TODO: should we update?
     // for now, we assume 4n pulse, and always update
-    this.pulse.triggerAttackRelease('C0', '8n', time);
+    SoundManager.playSound(this.instrument, "C0", "8n", time, 1);
     this.reDraw(pulseColumn);
   }
 

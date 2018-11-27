@@ -10,7 +10,7 @@ export default class Shooter extends TileEntity {
      * @param {number} tileSize 
      */
     constructor(direction, tileSize) {
-        super(tileSize, new Tone.PolySynth().toMaster());
+        super(tileSize, "pulse");
         this.direction = direction;
         this.reDraw();
     }

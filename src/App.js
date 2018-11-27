@@ -17,7 +17,7 @@ class App extends Component {
     super(props);
     this.state = {
       running: false,
-      bpm: 90,
+      bpm: 120,
     };
   }
 
@@ -54,8 +54,8 @@ class App extends Component {
 
     this.reSize();
 
-    this.enemies.enemies.setCell(1, 1, [new Walker(this.tWidth, new Tone.Synth().toMaster())]);
-    this.towers.towers.setCell(7, 5, new Base(this.tWidth, new Tone.Synth().toMaster()));
+    this.enemies.enemies.setCell(1, 1, [new Walker(this.tWidth, "pulse")]);
+    this.towers.towers.setCell(7, 5, new Base(this.tWidth, "pulse"));
 
     window.addEventListener('resize', () => { this.reSize() }, false);
 
@@ -96,22 +96,24 @@ class App extends Component {
       this.pulseColumn.tick();
       this.terrain.columnPulse(time, this.pulseColumn.current);
       this.towers.columnPulse(time, this.pulseColumn.current);
+      this.enemies.columnPulse(time, this.pulseColumn.current);
     }
 
     // handle eighth note events
     if (this.eighth.tick()) {
-      this.towers.moveProjectiles();
-
-      // check for collisions?
-      this.towers.checkForTowerProjectileCollisions(time);
-
-      this.towers.reDraw();
     }
+
+    this.towers.moveProjectiles();
+
+    // check for collisions?
+    this.towers.checkForTowerProjectileCollisions(time);
+
+    this.towers.reDraw();
 
     // handle 16 note events
     // CHECK FOR COLLISIONS??
+    this.enemies.moveEnemies();
     this.enemies.reDraw();
-
   }
 
   start = () => {

@@ -3,6 +3,7 @@ import TileEntity from '../../utils/tileEntity';
 import BaseProjectile from './baseProjectile';
 
 export default class Shot extends BaseProjectile {
+    res = .5;
     /**
      * Create a new basic shooter
      * @param {number} direction 
@@ -24,21 +25,21 @@ export default class Shot extends BaseProjectile {
         // by default don't move, and don't decay (lessen strength)
         switch (this.direction) {
             case 0: //right
-                return { x: 1, y: 0 };
+                return { x: this.res, y: 0 };
             case 0.5: //down right
-                return { x: 1, y: 1 };
+                return { x: this.res, y: this.res };
             case 1: //down
-                return { x: 0, y: 1 };
+                return { x: 0, y: this.res };
             case 1.5: //down left
-                return { x: -1, y: 1 };
+                return { x: -1 * this.res, y: this.res };
             case 2: //left
-                return { x: -1, y: 0 };
+                return { x: -1 * this.res, y: 0 };
             case 2.5: //left up
-                return { x: -1, y: -1 };
+                return { x: -1 * this.res, y: -1 * this.res };
             case 3: //up
-                return { x: 0, y: -1 };
+                return { x: 0, y: -1 * this.res };
             case 3.5: //up right
-                return { x: 1, y: -1 };
+                return { x: this.res, y: -1 * this.res };
         }
 
         return { x: 0, y: 0 };

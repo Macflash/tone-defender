@@ -2,6 +2,8 @@ import * as Tone from 'tone';
 import TileEntity from '../../utils/tileEntity';
 
 export default class BaseProjectile extends TileEntity {
+    res = .5;
+
     /**
      * Create a new basic projectile
      * @param {number} tileSize 

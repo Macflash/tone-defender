@@ -1,4 +1,5 @@
 import * as Tone from 'tone';
+import SoundManager from './soundManager';
 
 export default class TileEntity {
     canvas =  document.createElement('canvas');
@@ -7,9 +8,10 @@ export default class TileEntity {
     /**
      * Create a new basic tile entity
      * @param {number} tileSize 
+     * @param {string} instrument 
      */
     constructor(tileSize, instrument){
-        this.instrument = instrument;
+        this.instrument = instrument || "pulse";
         this.reSize(tileSize);
     }
 
@@ -39,7 +41,6 @@ export default class TileEntity {
      * @param {number} strength
      */
     activate(pitch, time, strength){
-        // this can should be overridden
-        this.instrument.triggerAttackRelease(pitch, "32n", time, strength);
+        SoundManager.playSound(this.instrument, pitch, "32n", time, strength);
     }
 }

@@ -9,7 +9,7 @@ export default class Pulser extends TileEntity {
      * @param {number} tileSize 
      */
     constructor(tileSize) {
-        super(tileSize, new Tone.PolySynth().toMaster());
+        super(tileSize, "pulse");
         this.reDraw();
     }
 
@@ -43,16 +43,15 @@ export default class Pulser extends TileEntity {
     activate(pitch, time, strength) {
         if (strength <= .1) { return []; }
         super.activate(pitch, time, strength);
-        //        this.instrument.triggerAttackRelease(pitch, "8n", time, strength);
         return [
-            new Pulse(1, 0, this.tileSize, strength),
-            new Pulse(1, 1, this.tileSize, strength),
-            new Pulse(1, 2, this.tileSize, strength),
-            new Pulse(1, 3, this.tileSize, strength),
-            new Pulse(1, 0.5, this.tileSize, strength),
-            new Pulse(1, 1.5, this.tileSize, strength),
-            new Pulse(1, 2.5, this.tileSize, strength),
-            new Pulse(1, 3.5, this.tileSize, strength),
+            new Pulse(2, 0, this.tileSize, strength),
+            new Pulse(2, 1, this.tileSize, strength),
+            new Pulse(2, 2, this.tileSize, strength),
+            new Pulse(2, 3, this.tileSize, strength),
+            new Pulse(2, 0.5, this.tileSize, strength),
+            new Pulse(2, 1.5, this.tileSize, strength),
+            new Pulse(2, 2.5, this.tileSize, strength),
+            new Pulse(2, 3.5, this.tileSize, strength),
         ];
     }
 }

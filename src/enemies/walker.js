@@ -1,4 +1,5 @@
 import TileEntity from "../utils/tileEntity";
+import SoundManager from "../utils/soundManager";
 
 export default class Walker extends TileEntity {
     /**
@@ -23,7 +24,6 @@ export default class Walker extends TileEntity {
      * @param {number} strength
      */
     activate(pitch, time, strength){
-        this.pulse.triggerAttackRelease(pitch, "32n", time);
-        /// TODO: create a projectile
+        SoundManager.playSound(this.instrument, pitch, "32n", time, strength);
     }
 }

@@ -4,6 +4,7 @@ import Base from '../towers/base';
 
 export default class Towers extends Layer {
     notes = ["F4", "E4", "B3", "A3", "G3", "E3", "C3", "C2"];
+    res = .5;
 
     /**
      * @param {string} name
@@ -17,8 +18,8 @@ export default class Towers extends Layer {
     }
 
     checkForTowerProjectileCollisions(time){
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
                 var projectiles = this.projectiles.getCell(x,y);
                 var tower = this.towers.getCell(x,y);
                 if(tower && projectiles && projectiles.length){
@@ -49,8 +50,8 @@ export default class Towers extends Layer {
     moveProjectiles() {
         // move the projectiles
         var movedProjectiles = new ItemGrid(this.width, this.height);
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
                 const projectiles = this.projectiles.getCell(x, y);
                 if (projectiles && projectiles.length) {
                     // loop through all the projectiles and move them
@@ -59,6 +60,8 @@ export default class Towers extends Layer {
                         //{{x: number, y: number, destroyProjectile: boolean}}
                         const movement = projectile.move();
                         if(!movement.destroyProjectile){
+                            console.log("moving projectile: ", movement);
+                            console.log("new x: " + (x + movement.x));
                             movedProjectiles.mergeCell(x + movement.x, y + movement.y, [projectile]);
                         }
                     }
@@ -76,8 +79,8 @@ export default class Towers extends Layer {
      */
     columnPulse(time, pulseColumn) {
         // activate the correct towers, and handle collisions
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
                 if (x == pulseColumn) {
                     const tower = this.towers.getCell(x, y);
                     if (tower) {
@@ -101,8 +104,8 @@ export default class Towers extends Layer {
 
     reDraw() {
         this.ctx.clearRect(0, 0, this.tileSize * this.width, this.tileSize * this.height);
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
                 const tower = this.towers.getCell(x, y);
                 if (tower) {
                     //TODO: we should let tower decide when to redraw //tower.reDraw(state);
