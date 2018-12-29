@@ -11,7 +11,7 @@ export default class BaseProjectile extends CachedCanvasTileEntity {
      * @param {number} strength 
      */
     constructor(tileSize, strength) {
-        super(tileSize, new Tone.Synth().toMaster());
+        super(tileSize);
         this.strength = strength;
         this.reDraw();
     }
@@ -30,7 +30,7 @@ export default class BaseProjectile extends CachedCanvasTileEntity {
      * @returns {{damage: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
      */
     onEnemyHit() {
-        this.instrument.dispose();
+        //this.instrument.dispose();
         // todo: handle damage or something here?
         // handle like splitting or creating new projectiles?
         return {damage: this.strength, destroyProjectile: true};
@@ -41,7 +41,7 @@ export default class BaseProjectile extends CachedCanvasTileEntity {
      * @returns {{strength: number, destroyProjectile: boolean, spawnedProjectiles: any[] }}
      */
     onTowerHit() {
-        this.instrument.dispose();
+        //this.instrument.dispose();
         // todo: handle damage or something here?
         // handle like splitting or creating new projectiles?
         return {strength: this.strength, destroyProjectile: true};
