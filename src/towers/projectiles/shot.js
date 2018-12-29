@@ -11,7 +11,7 @@ export default class Shot extends BaseProjectile {
      * @param {number} strength 
      */
     constructor(direction, tileSize, strength) {
-        super(tileSize, new Tone.Synth().toMaster());
+        super(tileSize);
         this.strength = strength;
         this.direction = direction;
         this.reDraw();

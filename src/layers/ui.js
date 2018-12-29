@@ -2,8 +2,6 @@ import Layer from './layer';
 import * as Tone from 'tone';
 
 export default class Ui extends Layer {
-    pulse = new Tone.Synth().toMaster();
-
     constructor(name, width, height, onClick) {
         super(name, width, height);
         this.canvas.onmousedown = this.clickHandler;
