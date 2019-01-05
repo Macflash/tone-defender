@@ -4,7 +4,7 @@ import ItemGrid from '../utils/itemGrid';
 export default class Enemies extends Layer {
     spawnX = 1;
     spawnY = 0;
-    res = .5;
+    res = .25;
 
     /**
      * Create a new layer of enemies
@@ -23,17 +23,28 @@ export default class Enemies extends Layer {
         for (let x = 0; x < this.width; x+=this.res) {
             for (let y = 0; y < this.height; y+=this.res) {
                 const enemies = this.enemies.getCell(x, y);
-                            let movement = {x:1, y: 0};
-                    if (enemies && enemies.length) {
-                        for(let enemy of enemies){
-                            let movement = {x:.5, y: 0};
 
-                            console.log("moved");
-                            // move the enemey, for NOW
-                            // lets say.. to the right.
-                            movedEnemies.mergeCell(x + movement.x, y + movement.y, [enemy]);
+                // ROUND to nearest cell.
+                const path = this.path.getCell(Math.floor(x), Math.floor(y));
+
+                if (enemies && enemies.length) {
+                    for(let enemy of enemies){
+                        if(enemy.currentMovementDurationRemaining <= 0){
+                            enemy.currentMovementDirection = path;
+                            enemy.currentMovementDurationRemaining = 1;
+                        }
+
+                        enemy.currentMovementDurationRemaining -= this.res;
+                        let movement = enemy.currentMovementDirection;
+
+                        if(movement){
+                            movedEnemies.mergeCell(x + (movement.x * this.res), y + (movement.y * this.res), [enemy]);
+                        }
+                        else{
+                            movedEnemies.mergeCell(x, y, [enemy]);
                         }
                     }
+                }
             }
         }
 
@@ -52,7 +63,7 @@ export default class Enemies extends Layer {
         // or granting them a shield(?)
         // activate the correct towers, and handle collisions
         for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y+=this.res) {
+            for (let y = 0; y < this.height; y += this.res) {
                 if (x == pulseColumn) {
                     const enemies = this.enemies.getCell(x, y);
                     if (enemies && enemies.length) {

@@ -2,6 +2,9 @@ import TileEntity from "../utils/tileEntity";
 import SoundManager from "../utils/soundManager";
 
 export default class Walker extends TileEntity {
+    currentMovementDirection = { x: 0, y: 0 };
+    currentMovementDurationRemaining = 0;
+
     /**
      * Redraw the basic shooter image
      * @param {*} state 

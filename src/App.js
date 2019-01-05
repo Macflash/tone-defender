@@ -55,6 +55,18 @@ class App extends Component {
     this.reSize();
 
     this.enemies.enemies.setCell(1, 1, [new Walker(this.tWidth, "pulse")]);
+
+    this.enemies.path.setCell(1, 1, { x: 0, y: 1 });
+    this.enemies.path.setCell(1, 2, { x: 0, y: 1 });
+    this.enemies.path.setCell(1, 3, { x: 0, y: 1 });
+    this.enemies.path.setCell(1, 4, { x: 0, y: 1 });
+    this.enemies.path.setCell(1, 5, { x: 1, y: 0 });
+    this.enemies.path.setCell(2, 5, { x: 1, y: 0 });
+    this.enemies.path.setCell(3, 5, { x: 1, y: 0 });
+    this.enemies.path.setCell(4, 5, { x: 1, y: 0 });
+    this.enemies.path.setCell(5, 5, { x: 1, y: 0 });
+    this.enemies.path.setCell(6, 5, { x: 1, y: 0 });
+
     this.towers.towers.setCell(7, 5, new Base(this.tWidth, "pulse"));
 
     window.addEventListener('resize', () => { this.reSize() }, false);
@@ -101,6 +113,8 @@ class App extends Component {
 
     // handle eighth note events
     if (this.eighth.tick()) {
+      this.enemies.moveEnemies();
+      this.enemies.reDraw();
     }
 
     this.towers.moveProjectiles();
@@ -112,8 +126,6 @@ class App extends Component {
 
     // handle 16 note events
     // CHECK FOR COLLISIONS??
-    this.enemies.moveEnemies();
-    this.enemies.reDraw();
   }
 
   start = () => {
