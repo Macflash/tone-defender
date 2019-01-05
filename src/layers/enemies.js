@@ -76,6 +76,39 @@ export default class Enemies extends Layer {
         }
     }
 
+    checkForEnemyProjectileCollisions(time, projectileGrid){
+        for (let x = 0; x < this.width; x+=this.res) {
+            for (let y = 0; y < this.height; y+=this.res) {
+                var projectiles = projectileGrid.getCell(x,y);
+                var enemies = this.enemies.getCell(x,y);
+                if(enemies && enemies.length && projectiles && projectiles.length){
+                    console.log("collision!")
+                    var sum = 0;
+                    var survivingProjectiles = projectiles.filter((p) => {
+                        var hit = p.onEnemyHit();
+                        sum += hit.damage;
+                        return !hit.destroyProjectile;
+                    });
+
+                    projectileGrid.setCell(x,y, survivingProjectiles);
+
+                    var survivingEnemies = [];
+                    for(let enemy of enemies){
+                        enemy.health -= sum / enemies.length;
+                        if(enemy.health > 0){
+                            console.log("enemy health at ", enemy.health);
+
+                            survivingEnemies.push(enemy);
+                        }
+                    }
+
+                    // for now, any hit kills the enemy, and the projectile?
+                    this.enemies.setCell(x,y, survivingEnemies);
+                }
+            }
+        }
+    }
+
     /**
      * resize the towers layer
      * @param {number} tileSize 

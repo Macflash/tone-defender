@@ -60,14 +60,26 @@ class App extends Component {
 
     this.enemies.enemies.setCell(1, 1, [new Walker(this.tWidth, "pulse")]);
 
+    this.enemies.path.setCell(1, 0, { x: 0, y: 1 });
     this.enemies.path.setCell(1, 1, { x: 0, y: 1 });
     this.enemies.path.setCell(1, 2, { x: 0, y: 1 });
     this.enemies.path.setCell(1, 3, { x: 0, y: 1 });
     this.enemies.path.setCell(1, 4, { x: 0, y: 1 });
     this.enemies.path.setCell(1, 5, { x: 1, y: 0 });
     this.enemies.path.setCell(2, 5, { x: 1, y: 0 });
-    this.enemies.path.setCell(3, 5, { x: 1, y: 0 });
-    this.enemies.path.setCell(4, 5, { x: 1, y: 0 });
+
+    this.enemies.path.setCell(3, 5, { x: 0, y: -1 });
+    this.enemies.path.setCell(3, 4, { x: 0, y: -1 });
+    this.enemies.path.setCell(3, 3, { x: 0, y: -1 });
+
+    this.enemies.path.setCell(3, 2, { x: 1, y: 0 });
+    this.enemies.path.setCell(4, 2, { x: 1, y: 0 });
+
+    this.enemies.path.setCell(5, 2, { x: 0, y: 1 });
+
+    this.enemies.path.setCell(5, 3, { x: 0, y: 1 });
+    this.enemies.path.setCell(5, 4, { x: 0, y: 1 });
+
     this.enemies.path.setCell(5, 5, { x: 1, y: 0 });
     this.enemies.path.setCell(6, 5, { x: 1, y: 0 });
 
@@ -81,6 +93,7 @@ class App extends Component {
 
     //create a synth and connect it to the master output (your speakers)
     this.pulseColumn = new Ticker(this.tWidth);
+    this.whole = new Ticker(16);
     this.quarter = new Ticker(4);
     this.eighth = new Ticker(2);
     this.loop = new Tone.Loop(this.onLoop, "16n");
@@ -118,7 +131,6 @@ class App extends Component {
     // handle eighth note events
     if (this.eighth.tick()) {
       this.enemies.moveEnemies();
-      this.enemies.reDraw();
     }
 
     this.towers.moveProjectiles();
@@ -126,7 +138,12 @@ class App extends Component {
     // check for collisions?
     this.towers.checkForTowerProjectileCollisions(time);
 
+    // Check for enemy and projectile collisions!
+    this.enemies.checkForEnemyProjectileCollisions(time, this.towers.projectiles);
+
+    this.enemies.reDraw();
     this.towers.reDraw();
+
 
     // handle 16 note events
     // CHECK FOR COLLISIONS??

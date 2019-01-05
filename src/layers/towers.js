@@ -60,8 +60,6 @@ export default class Towers extends Layer {
                         //{{x: number, y: number, destroyProjectile: boolean}}
                         const movement = projectile.move();
                         if(!movement.destroyProjectile){
-                            console.log("moving projectile: ", movement);
-                            console.log("new x: " + (x + movement.x));
                             movedProjectiles.mergeCell(x + movement.x, y + movement.y, [projectile]);
                         }
                     }
