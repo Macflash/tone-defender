@@ -58,7 +58,7 @@ class App extends Component {
 
     this.reSize();
 
-    this.enemies.enemies.setCell(1, 1, [new Walker(this.tWidth, "pulse")]);
+    this.enemies.enemies.setCell(1, 0, [new Walker(this.tWidth, "pulse")]);
 
     this.enemies.path.setCell(1, 0, { x: 0, y: 1 });
     this.enemies.path.setCell(1, 1, { x: 0, y: 1 });
@@ -120,6 +120,10 @@ class App extends Component {
    * @param {number} time 
    */
   onLoop = (time) => {
+    if(this.whole.tick()){
+      this.enemies.enemies.setCell(1, 0, [new Walker(this.tWidth, "pulse")]);
+    }
+
     // handle quarter note events
     if (this.quarter.tick()) {
       this.pulseColumn.tick();
@@ -133,6 +137,7 @@ class App extends Component {
       this.enemies.moveEnemies();
     }
 
+    // handle 16 note events
     this.towers.moveProjectiles();
 
     // check for collisions?
@@ -144,9 +149,6 @@ class App extends Component {
     this.enemies.reDraw();
     this.towers.reDraw();
 
-
-    // handle 16 note events
-    // CHECK FOR COLLISIONS??
   }
 
   start = () => {

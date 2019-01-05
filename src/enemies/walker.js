@@ -1,7 +1,13 @@
 import TileEntity from "../utils/tileEntity";
 import SoundManager from "../utils/soundManager";
 
-export default class Walker extends TileEntity {
+export default class Walker {
+    static statcanvas = document.createElement('canvas');
+    static statctx = Walker.statcanvas.getContext('2d');
+
+    canvas = Walker.statcanvas;
+    ctx = Walker.statctx;
+
     currentMovementDirection = { x: 0, y: 0 };
     currentMovementDurationRemaining = 0;
     health = 1;
@@ -29,5 +35,16 @@ export default class Walker extends TileEntity {
      */
     activate(pitch, time, strength){
         SoundManager.playSound(this.instrument, pitch, "32n", time, strength);
+    }
+    
+    /**
+     * Resize the entity
+     * @param {number} tileSize
+     */
+    reSize(tileSize){
+        this.tileSize = tileSize;
+        this.canvas.width = this.tileSize;
+        this.canvas.height = this.tileSize;
+        this.reDraw();
     }
 }
