@@ -22,6 +22,10 @@ class App extends Component {
   }
 
   handleUiClick = (x, y) => {
+    if(this.enemies.path.getCell(x,y)){
+      return;
+    }
+
     var cell = this.towers.towers.getCell(x, y);
     if (cell) { // cell has a tower
       if (cell instanceof Pulser) {
@@ -169,8 +173,8 @@ class App extends Component {
     return <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div style={{ position: "relative", flex: "none", height: this.state.vpHeight, padding: "5px" }}>
         <canvas id="terrainCanvas" style={{ zIndex: "10" }} />
-        <canvas id="towerCanvas" style={{ zIndex: "20" }} />
-        <canvas id="enemyCanvas" style={{ zIndex: "30" }} />
+        <canvas id="enemyCanvas" style={{ zIndex: "20" }} />
+        <canvas id="towerCanvas" style={{ zIndex: "30" }} />
         <canvas id="uiCanvas" style={{ zIndex: "40" }} />
       </div>
       <div style={{ color: "white", padding: "5px", height: "10vw", flex: "none", display: "flex", justifyContent: "center", alignItems: "center" }}>

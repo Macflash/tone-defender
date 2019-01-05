@@ -91,6 +91,22 @@ export default class Enemies extends Layer {
      */
     reDraw(pulseColumn) {
         this.ctx.clearRect(0, 0, this.tileSize * this.width, this.tileSize * this.height);
+
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                const path = this.path.getCell(x,y);
+                // let enemies overlap, however we should be able to
+                // visually see which ones are where even if they are in the same tile
+                if(path){
+                    //TODO: we should let tower decide when to redraw //tower.reDraw(state);
+                    const offX = x * this.tileSize;
+                    const offY = y * this.tileSize;
+
+                    this.ctx.fillRect(offX, offY, this.tileSize, this.tileSize);
+                }
+            }
+        }
+
         for (let x = 0; x < this.width; x+=this.res) {
             for (let y = 0; y < this.height; y+=this.res) {
                 const enemies = this.enemies.getCell(x,y);
